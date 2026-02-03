@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will you be my Valentine?</title>
+  <style>
+    :root{--bg:#ffeef4;--accent:#ff4d7a;--card:#fff}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,var(--bg),#fff);
+      overflow:hidden;
+    }
+
+    /* turtle background (emoji elements) */
+    .turtle{
+      position:absolute;
+      pointer-events:none;
+      font-size:56px;
+      opacity:.12;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.06));
+      transform: translateY(0) rotate(0deg);
+      animation: float 8s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+    .turtle.t1{left:6%; top:12%; animation-duration:10s; transform-origin:center}
+    .turtle.t2{left:22%; top:80%; animation-duration:12s; animation-delay:1s}
+    .turtle.t3{left:40%; top:6%; animation-duration:9s; animation-delay:.8s}
+    .turtle.t4{left:60%; top:72%; animation-duration:11s; animation-delay:2s}
+    .turtle.t5{left:78%; top:18%; animation-duration:13s; animation-delay:.4s}
+    .turtle.t6{left:88%; top:86%; animation-duration:14s; animation-delay:1.6s}
+    .turtle.t7{left:50%; top:40%; font-size:72px; opacity:.07; animation-duration:18s; animation-delay:0s}
+    .turtle.t8{left:12%; top:48%; font-size:48px; opacity:.09; animation-duration:16s; animation-delay:0.6s}
+
+    @keyframes float{
+      0%{transform: translateY(0) rotate(-4deg); opacity:.12}
+      50%{transform: translateY(-14px) rotate(4deg); opacity:.16}
+      100%{transform: translateY(0) rotate(-4deg); opacity:.12}
+    }
+
+    .card{
+      position:relative;
+      z-index:2;
+      width:min(720px,92vw);
+      max-width:720px;
+      background:var(--card);
+      padding:48px 32px;
+      border-radius:14px;
+      box-shadow:0 12px 40px rgba(0,0,0,0.06);
+      text-align:center;
+    }
+    h1{margin:0 0 36px;font-size:36px;color:#2b2b2b}
+    .area{position:relative;height:140px;display:flex;align-items:center;justify-content:center}
+    button{padding:12px 20px;border-radius:10px;border:0;font-size:16px;cursor:pointer;user-select:none}
+    .yes{background:linear-gradient(90deg,var(--accent),#ff6b90);color:#fff;box-shadow:0 10px 30px rgba(255,77,122,0.18)}
+    .no{position:absolute;background:#efefef;color:#333;box-shadow:0 8px 22px rgba(0,0,0,0.06)}
+    @media (max-width:420px){ .card{padding:28px 18px} h1{font-size:24px} .area{height:200px} }
+  </style>
+</head>
+<body>
+  <!-- decorative turtles in background -->
+  <span class="turtle t1">🐢</span>
+  <span class="turtle t2">🐢</span>
+  <span class="turtle t3">🐢</span>
+  <span class="turtle t4">🐢</span>
+  <span class="turtle t5">🐢</span>
+  <span class="turtle t6">🐢</span>
+  <span class="turtle t7">🐢</span>
+  <span class="turtle t8">🐢</span>
+
+  <div class="card" id="card">
+    <h1 id="prompt">Will you be my Valentine?</h1>
+    <div class="area" id="area" aria-hidden="false">
+      <button id="yesBtn" class="yes" aria-label="Yes">Yes 💖</button>
+      <button id="noBtn" class="no" aria-label="No">No</button>
+    </div>
+  </div>
+
+  <script>
+    const area = document.getElementById('area');
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const prompt = document.getElementById('prompt');
+
+    function placeNoRandomly(padding = 8) {
+      const a = area.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+      const maxX = Math.max(0, a.width - b.width - padding*2);
+      const maxY = Math.max(0, a.height - b.height - padding*2);
+      const x = Math.random() * maxX + padding;
+      const y = Math.random() * maxY + padding;
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
+      noBtn.style.transform = 'translate(0,0)';
+    }
+
+    function evade(e){
+      placeNoRandomly();
+      if (e) e.preventDefault();
+    }
+
+    noBtn.addEventListener('mouseenter', evade);
+    noBtn.addEventListener('pointerenter', evade);
+    noBtn.addEventListener('touchstart', evade, {passive:false});
+    noBtn.addEventListener('click', (e) => { e.preventDefault(); placeNoRandomly(); });
+
+    yesBtn.addEventListener('click', () => {
+      prompt.textContent = "Yay! 💘";
+      yesBtn.textContent = "I knew you'd say yes!";
+      yesBtn.disabled = true;
+      noBtn.style.display = 'none';
+    });
+
+    window.addEventListener('load', placeNoRandomly);
+    window.addEventListener('resize', placeNoRandomly);
+  </script>
+</body>
+</html>
